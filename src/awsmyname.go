@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/keegancsmith/shell"
 	"os"
 )
 
@@ -57,7 +58,7 @@ func main() {
 		value := aws.StringValue(resp.Tags[i].Value)
 
 		if key == "Name" {
-			fmt.Printf("export NICKNAME=%s\n", value)
+			fmt.Printf("export NICKNAME=%s\n", shell.ReadableEscapeArg(value))
 			os.Exit(0)
 		}
 
