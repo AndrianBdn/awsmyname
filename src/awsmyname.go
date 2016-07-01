@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
@@ -11,6 +12,9 @@ import (
 )
 
 func main() {
+	updatePathPtr := flag.String("sh", "", "a writable path to the sh file that will contain export NICKNAME")
+	flag.Parse()
+
 	sess := session.New()
 	meta := ec2metadata.New(sess)
 
@@ -58,7 +62,19 @@ func main() {
 		value := aws.StringValue(resp.Tags[i].Value)
 
 		if key == "Name" {
-			fmt.Printf("export NICKNAME=%s\n", shell.ReadableEscapeArg(value))
+			exportLine := fmt.Sprintf("export NICKNAME=%s\n", shell.ReadableEscapeArg(value))
+
+			if len(*updatePathPtr) > 0 {
+				f, err := os.Create(*updatePathPtr)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
+				defer f.Close()
+				f.WriteString(exportLine)
+			}
+
+			fmt.Print(exportLine)
 			os.Exit(0)
 		}
 
