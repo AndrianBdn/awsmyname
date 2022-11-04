@@ -10,7 +10,6 @@ build:
            -v $$(pwd)/src:/go/src/awsmyname \
            -e GOOS=linux \
            -e GOARCH=amd64 \
-           -e GO111MODULE=off \
            awsmyname-build \
            bash -c "cd /go/src/awsmyname && go build -o /go/bin/awsmyname-x86_64"
 
@@ -19,7 +18,6 @@ build:
            -v $$(pwd)/src:/go/src/awsmyname \
            -e GOOS=linux \
            -e GOARCH=arm64 \
-           -e GO111MODULE=off \
            awsmyname-build \
            bash -c "cd /go/src/awsmyname && go build -o /go/bin/awsmyname-arm64"
 
